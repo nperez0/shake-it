@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "alexa-sdk": "^1.0.25",
+    "ask-sdk-core": "^2.9.0",
+    "ask-sdk-model": "^1.32.0",
+    "aws-sdk": "^2.756.0",
     "spotify-web-api-node": "^4.0.0"
   },
   "devDependencies": {},

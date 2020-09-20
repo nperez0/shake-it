@@ -1,17 +1,32 @@
-const Alexa = require('alexa-sdk');
+const Alexa = require('ask-sdk-core');
 const wrappedCode = require('./wrappedCode'); 
 
-exports.handler = function(event, context, callback) {
-    const alexa = Alexa.handler(event, context, callback);
-    alexa.registerHandlers(handlers);
-    alexa.execute();
+const LaunchRequestHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
+    },
+    handle(handlerInput) {
+        wrappedCode();
+
+        return handlerInput.responseBuilder.getResponse();
+    }
 };
 
-const handlers = {
-    'LaunchRequest': function () {
-        wrappedCode();
-        this.response
-        .cardRenderer('Stated music', 'Enjoy your evening!')
-        this.emit(':responseReady');
-	},
+const ErrorHandler = {
+    canHandle() {
+        return true;
+    },
+    handle(handlerInput, error) {
+        console.log(`~~~~ Error handled: ${JSON.stringify(error)}`);
+
+        return handlerInput.responseBuilder
+            .getResponse();
+    }
 };
+
+exports.handler = Alexa.SkillBuilders.custom()
+    .addRequestHandlers(
+        LaunchRequestHandler)
+    .addErrorHandlers(
+        ErrorHandler)
+    .lambda();
